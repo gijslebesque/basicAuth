@@ -54,7 +54,7 @@ router.get("/", (req, res) => {
     .populate("author")
     .then(posts => {
       debugger;
-      res.render("posts", { posts: posts });
+      res.render("posts", { posts });
     });
 });
 // create get request to get all posts

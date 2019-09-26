@@ -9,9 +9,11 @@ const userSchema = new Schema({
   },
   age: Number,
   mood: String,
-  password: { type: String, required: true },
+  password: { type: String },
   //user can have many posts (one to manys)
-  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }]
+  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  googleID: { type: String, unique: true },
+  profileImg: String
 });
 
 const User = mongoose.model("User", userSchema);
