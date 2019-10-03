@@ -22,6 +22,7 @@ const profileRouter = require("./routes/profile");
 const authenticate = require("./routes/authorisation");
 const postsRouter = require("./routes/posts");
 const googleAuth = require("./routes/authGoogle");
+const stravaAuth = require("./routes/authStrava");
 
 require("dotenv").config();
 
@@ -57,6 +58,8 @@ app.use(
 
 require("./config/local-passport");
 require("./config/google-passport");
+require("./config/strava-passport");
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -111,6 +114,7 @@ app.use("/auth", authRouter);
 app.use("/profile", authenticate("/"), profileRouter);
 app.use("/posts", postsRouter);
 app.use("/", googleAuth);
+app.use("/", stravaAuth);
 // catch 404 and forward to error handler
 
 app.use(function(req, res, next) {

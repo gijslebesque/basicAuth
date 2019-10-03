@@ -2,31 +2,34 @@ require("dotenv").config();
 
 const User = require("../models/User");
 
-const GoogleStrategy = require("passport-google-oauth20");
+const StravaStrategy = require("passport-strava-oauth2").Strategy;
 const passport = require("passport");
 module.exports = passport.use(
-  new GoogleStrategy(
+  new StravaStrategy(
     {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CB
+      clientID: process.env.STRAVA_CLIENT_ID,
+      clientSecret: process.env.STRAVA_CLIENT_SECRET,
+      callbackURL: process.env.STRAVA_CB
     },
     async (accessToken, refreshToken, profile, done) => {
+      // asynchronous verification, for effect...
+      debugger;
+
       try {
-        debugger;
-        const user = await User.findOne({ googleID: profile.id });
+        const user = await User.findOne({ stravaID: profile.id });
         if (user) {
           debugger;
           done(null, user); // passes the profile data to serializeUser
         } else {
           debugger;
           const newUser = await User.create({
-            name: profile.displayName, // Gijs Lebesque
+            name: profile.displayName,
             profileImg: profile.photos[0].value,
-            googleID: profile.id
+            stravaID: profile.id
           });
           return done(null, newUser);
         }
+        debugger;
       } catch (err) {
         return done(err);
       }

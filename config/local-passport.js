@@ -3,14 +3,14 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
-passport.use(
+module.exports = passport.use(
   new LocalStrategy(
     // by default local strategy will look for a username field
     // this app uses name instead of username so we have to pass an option object
     {
       usernameField: "name"
     },
-    //takes in a callback function with three arguments
+    // takes in a callback function with three arguments
     // the users username, password,
     // and a callback functions by concention called done (similar to express next)
     // the done cb takes in three arguments, an error, an authorised user and an optional message
@@ -34,6 +34,3 @@ passport.use(
     }
   )
 );
-// };
-
-module.exports = passport;
