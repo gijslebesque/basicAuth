@@ -108,11 +108,17 @@ app.post(
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
+
 //before we reach profileRouter function, we use our custom middleware
 app.use("/profile", authenticate("/"), profileRouter);
+
 app.use("/posts", postsRouter);
 app.use("/", googleAuth);
 app.use("/", stravaAuth);
+app.use("/profile", authorisationRouter, profileRouter);
+
+app.use("/posts", postsRouter);
+
 // catch 404 and forward to error handler
 
 app.use(function(req, res, next) {

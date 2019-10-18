@@ -46,16 +46,6 @@ router.get("/update/:id", (req, res) => {
     });
 });
 
-// router.post("/update/:id", (req, res) => {
-//   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-//     .then(user => {
-//       res.redirect("/users");
-//     })
-//     .catch(err => {
-//       res.send(err);
-//     });
-// });
-
 router.get("/delete/:id", (req, res) => {
   User.findByIdAndDelete(req.params.id)
     .then(user => {

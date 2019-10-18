@@ -1,4 +1,5 @@
-#Steps for installing passport local
+#Steps for installing
 
-1. npm install passport passport-local
-2. create a config directory and inside there a passport.js where we'll declare how our local strategy will handle authorisation
+create a .env file in your root directory with the following variable
+
+MONGO_URI=yourconnectionstring
