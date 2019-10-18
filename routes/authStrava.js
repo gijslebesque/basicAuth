@@ -7,8 +7,6 @@ router.get(
   "/auth/strava/callback",
   passport.authenticate("strava", { failureRedirect: "/" }),
   function(req, res) {
-    debugger;
-
     // Successful authentication, redirect home.
     res.redirect("/profile");
   }

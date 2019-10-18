@@ -24,7 +24,7 @@ const Post = require("../models/Post");
 
 router.post("/", (req, res) => {
   const { title, content } = req.body;
-  const id = req.session.user._id;
+  const id = req.user._id;
 
   Post.create({
     title: title,

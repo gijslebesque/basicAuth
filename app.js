@@ -58,6 +58,7 @@ app.use(
 
 require("./config/local-passport");
 require("./config/google-passport");
+
 require("./config/strava-passport");
 
 app.use(passport.initialize());
@@ -72,15 +73,12 @@ app.use(passport.session());
 // which at other stages of our application we can use to get the user's
 // details again. (So serialize is called once, after the authenticate process has succedeeded)
 passport.serializeUser((user, done) => {
-  debugger;
   done(null, user.id);
 });
 
 // The next time the user
 passport.deserializeUser((id, done) => {
-  debugger;
   User.findById(id, (err, user) => {
-    debugger;
     //if the user is found the session is set un req.user
     done(err, user);
   });
