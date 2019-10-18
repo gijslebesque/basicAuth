@@ -115,7 +115,7 @@ app.use("/profile", authenticate("/"), profileRouter);
 app.use("/posts", postsRouter);
 app.use("/", googleAuth);
 app.use("/", stravaAuth);
-app.use("/profile", authorisationRouter, profileRouter);
+app.use("/profile", authenticate("/"), profileRouter);
 
 app.use("/posts", postsRouter);
 
