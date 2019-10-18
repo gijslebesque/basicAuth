@@ -8,9 +8,9 @@ router.post("/", (req, res) => {
   // when we create a post we need to populate three fields.
   // we receive title and content from a form.
   const { title, content } = req.body;
+  const id = req.user._id;
 
   // the user id (which we need to establish as relation) we get from the session
-  const id = req.session.user._id;
 
   Post.create({
     title: title,
@@ -37,7 +37,8 @@ router.get("/", (req, res) => {
   Post.find()
     .populate("author")
     .then(posts => {
-      res.render("posts", { posts: posts });
+      res.render("posts", { posts });
+
     });
 });
 

@@ -6,16 +6,23 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const hbs = require("hbs");
 
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const passport = require("passport");
+
+const User = require("./models/User");
+
+const app = express();
+
+//Routes
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
-const authorisationRouter = require("./routes/authorisation");
+const authenticate = require("./routes/authorisation");
 const postsRouter = require("./routes/posts");
-const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
-
-const app = express();
+const googleAuth = require("./routes/authGoogle");
+const stravaAuth = require("./routes/authStrava");
 
 require("dotenv").config();
 
@@ -49,6 +56,34 @@ app.use(
   })
 );
 
+require("./config/local-passport");
+require("./config/google-passport");
+
+require("./config/strava-passport");
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// After a user has logged in as user is serialised.
+// To serialize an object means to convert its state
+// to a byte stream so way that the byte stream can
+// be reverted back into a copy of the object.
+
+// In other words: we use the user's id here create a cookie,
+// which at other stages of our application we can use to get the user's
+// details again. (So serialize is called once, after the authenticate process has succedeeded)
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+// The next time the user
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => {
+    //if the user is found the session is set un req.user
+    done(err, user);
+  });
+});
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
@@ -59,10 +94,27 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+//authorisation is first callback and checks if
+//the session is stored.
+
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/profile",
+    failureRedirect: "/"
+  })
+);
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/auth", authRouter);
+
 //before we reach profileRouter function, we use our custom middleware
+app.use("/profile", authenticate("/"), profileRouter);
+
+app.use("/posts", postsRouter);
+app.use("/", googleAuth);
+app.use("/", stravaAuth);
 app.use("/profile", authorisationRouter, profileRouter);
 
 app.use("/posts", postsRouter);
